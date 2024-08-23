@@ -1,5 +1,6 @@
 package com.example.demo.MyContact.controller;
 
+import com.example.demo.MyContact.model.UserRegisterDTO;
 import com.example.demo.MyContact.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,14 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestParam String email, @RequestParam String password, @RequestParam String name) {
+    public ResponseEntity<String> register(@RequestBody UserRegisterDTO userRegisterDTO) {
         try {
-            authService.registerUser(email, password, name);
+            if (userRegisterDTO.getEmail() == null || userRegisterDTO.getPassword() == null ||
+                    userRegisterDTO.getName() == null) {
+                return new ResponseEntity<>("Invalid input data", HttpStatus.BAD_REQUEST);
+            }
+            authService.registerUser(
+                    userRegisterDTO.getEmail(), userRegisterDTO.getPassword(), userRegisterDTO.getName());
             return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
         } catch (SQLException e) {
             return new ResponseEntity<>("Registration failed", HttpStatus.INTERNAL_SERVER_ERROR);

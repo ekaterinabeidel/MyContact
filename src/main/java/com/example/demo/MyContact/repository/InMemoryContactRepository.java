@@ -3,12 +3,14 @@ package com.example.demo.MyContact.repository;
 import com.example.demo.MyContact.model.Contact;
 import com.example.demo.MyContact.model.ContactDTO;
 
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryContactRepository implements ContactRepository {
 
     private final Map<Long, Contact> contacts = new HashMap<>();
+
     private final AtomicLong idCounter = new AtomicLong();
 
     @Override
