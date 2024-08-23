@@ -2,48 +2,70 @@ package com.example.demo.MyContact.service;
 
 import com.example.demo.MyContact.model.Contact;
 import com.example.demo.MyContact.model.ContactDTO;
+import com.example.demo.MyContact.repository.ContactRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class InMemoryContactService implements ContactService {
 
-    private final Map<Long, Contact> contacts = new HashMap<>();
-    private long idCounter = 1;
+    private final ContactRepository contactRepository;
+
+    @Autowired
+    public InMemoryContactService(ContactRepository contactRepository) {
+        this.contactRepository = contactRepository;
+    }
 
     @Override
     public List<Contact> getAllContacts() {
-        return new ArrayList<>(contacts.values());
+        return contactRepository.findAll();
     }
 
     @Override
     public Optional<Contact> getContactById(Long id) {
-        return Optional.ofNullable(contacts.get(id));
+        return contactRepository.findById(id);
     }
 
     @Override
-    public Contact saveContact(Contact contact) {
-        contact.setId(idCounter++);
-        contacts.put(contact.getId(), contact);
-        return contact;
+    public Contact createContact(ContactDTO contactDTO) {
+        if (contactDTO == null) {
+            throw new IllegalArgumentException("ContactDTO cannot be null");
+        }
+
+        Contact contact = new Contact();
+        contact.setName(contactDTO.getName());
+        contact.setFullname(contactDTO.getFullname());
+        contact.setEmail(contactDTO.getEmail());
+        contact.setPhone(contactDTO.getPhone());
+
+        return contactRepository.createContact(contact);
     }
 
     @Override
     public Contact updateContact(Long id, ContactDTO updatedContact) {
-        Contact contact = contacts.get(id);
-        if (contact != null) {
-            contact.setName(updatedContact.getName());
-            contact.setEmail(updatedContact.getEmail());
-            contact.setPhone(updatedContact.getPhone());
-            return contact;
-        } else {
-            throw new RuntimeException("Contact not found");
+        if (id == null || updatedContact == null) {
+            throw new IllegalArgumentException("ID and ContactDTO cannot be null");
         }
+
+        // Retrieve existing contact
+        Contact existingContact = contactRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Contact with id " + id + " does not exist."));
+
+        // Update existing contact details
+        existingContact.setName(updatedContact.getName());
+        existingContact.setFullname(updatedContact.getFullname());
+        existingContact.setEmail(updatedContact.getEmail());
+        existingContact.setPhone(updatedContact.getPhone());
+
+        return contactRepository.updateContact(id, updatedContact);
     }
 
     @Override
     public void deleteContact(Long id) {
-        contacts.remove(id);
+        contactRepository.deleteById(id);
     }
 }

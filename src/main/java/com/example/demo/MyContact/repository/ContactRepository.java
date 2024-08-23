@@ -1,6 +1,7 @@
 package com.example.demo.MyContact.repository;
 
 import com.example.demo.MyContact.model.Contact;
+import com.example.demo.MyContact.model.ContactDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +14,17 @@ import java.util.Optional;
  * Контейнер Spring инжектирует этот репозиторий в нужные места,
  * например, в сервисы, такие как DatabaseContactService.
  */
-public interface ContactRepository  {
+public interface ContactRepository {
     List<Contact> findAll();
+
     Optional<Contact> findById(Long id);
-    Contact save(Contact contact); //update, create
+
+    Contact createContact(Contact contact);
+
+    Contact updateContact(Long id, ContactDTO contactDTO);
+
+    Contact saveContact(Contact contact);
+
     void deleteById(Long id);
 
 }

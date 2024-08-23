@@ -1,18 +1,16 @@
 package com.example.demo.MyContact.model;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Entity
+@AllArgsConstructor
+
+
 public class Contact {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
     private String name;
     private String fullname;
@@ -20,4 +18,7 @@ public class Contact {
     private String phone;
 
 
+    public Contact() {
+
+    }
 }

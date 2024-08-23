@@ -1,8 +1,115 @@
 package com.example.demo.MyContact.repository;
 
 import com.example.demo.MyContact.model.Contact;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.MyContact.model.ContactDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
-public interface DatabaseContactRepository extends JpaRepository<Contact, Long> {
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Optional;
 
+@Repository
+public class DatabaseContactRepository implements ContactRepository {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Contact> contactRowMapper = (ResultSet rs, int rowNum) -> {
+        Contact contact = new Contact();
+        contact.setId(rs.getLong("id"));
+        contact.setName(rs.getString("name"));
+        contact.setFullname(rs.getString("fullname"));
+        contact.setEmail(rs.getString("email"));
+        contact.setPhone(rs.getString("phone"));
+        return contact;
+    };
+
+    @Override
+    public List<Contact> findAll() {
+        String sql = "SELECT * FROM contacts ORDER BY created_at DESC";
+        return jdbcTemplate.query(sql, contactRowMapper);
+    }
+
+    @Override
+    public Optional<Contact> findById(Long id) {
+        String sql = "SELECT * FROM contacts WHERE id = ?";
+        try {
+            Contact contact = jdbcTemplate.queryForObject(sql, new Object[]{id}, contactRowMapper);
+            return Optional.ofNullable(contact);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Contact createContact(Contact contact) {
+        String sql = "INSERT INTO contacts (name, fullname, email, phone) VALUES (?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, contact.getName());
+            ps.setString(2, contact.getFullname());
+            ps.setString(3, contact.getEmail());
+            ps.setString(4, contact.getPhone());
+            return ps;
+        }, keyHolder);
+        Number key = keyHolder.getKey();
+        if (key != null) {
+            contact.setId(key.longValue());
+            return contact;
+        }
+        throw new RuntimeException("Failed to generate ID for new contact.");
+    }
+
+    @Override
+    public Contact updateContact(Long id, ContactDTO contactDTO) {
+        String sql = "UPDATE contacts SET name = ?, fullname = ?, email = ?, phone = ? WHERE id = ?";
+        int rowsAffected = jdbcTemplate.update(sql,
+                contactDTO.getName(),
+                contactDTO.getFullname(),
+                contactDTO.getEmail(),
+                contactDTO.getPhone(),
+                id);
+        if (rowsAffected == 0) {
+            throw new RuntimeException("Failed to update contact with id " + id);
+        }
+        // Return the updated contact with the provided ID
+        Contact contact = new Contact();
+        contact.setId(id);
+        contact.setName(contactDTO.getName());
+        contact.setFullname(contactDTO.getFullname());
+        contact.setEmail(contactDTO.getEmail());
+        contact.setPhone(contactDTO.getPhone());
+        return contact;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM contacts WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public Contact saveContact(Contact contact) {
+        if (contact.getId() != null) {
+            // If the contact has an ID, attempt to update it
+            Optional<Contact> existingContact = findById(contact.getId());
+            if (existingContact.isPresent()) {
+                return updateContact(contact.getId(), new ContactDTO(contact));
+            } else {
+                throw new RuntimeException("Contact with id " + contact.getId() + " does not exist.");
+            }
+        } else {
+            // If the contact does not have an ID, create a new one
+            return createContact(contact);
+        }
+    }
 }

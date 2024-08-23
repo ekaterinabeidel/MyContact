@@ -17,8 +17,12 @@ import java.util.Optional;
 
 public interface ContactService {
     List<Contact> getAllContacts();
+
     Optional<Contact> getContactById(Long id);
-    Contact saveContact(Contact contact);
+
+    Contact createContact(ContactDTO contactDTO);
+
     Contact updateContact(Long id, ContactDTO updatedContact);
+
     void deleteContact(Long id);
 }
