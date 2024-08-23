@@ -65,7 +65,8 @@ public class InMemoryContactService implements ContactService {
     }
 
     @Override
-    public void deleteContact(Long id) {
-        contactRepository.deleteById(id);
+    public boolean deleteContact(Long id) {
+        int rowsAffected = contactRepository.deleteById(id);
+        return rowsAffected > 0;
     }
 }

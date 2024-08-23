@@ -24,5 +24,5 @@ public interface ContactService {
 
     Contact updateContact(Long id, ContactDTO updatedContact);
 
-    void deleteContact(Long id);
+    boolean deleteContact(Long id);
 }

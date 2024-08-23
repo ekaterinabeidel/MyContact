@@ -71,7 +71,12 @@ public class InMemoryContactRepository implements ContactRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
-        contacts.remove(id);
+    public int deleteById(Long id) {
+        if (contacts.containsKey(id)) {
+            contacts.remove(id);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

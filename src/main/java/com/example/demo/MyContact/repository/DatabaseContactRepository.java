@@ -81,7 +81,6 @@ public class DatabaseContactRepository implements ContactRepository {
         if (rowsAffected == 0) {
             throw new RuntimeException("Failed to update contact with id " + id);
         }
-        // Return the updated contact with the provided ID
         Contact contact = new Contact();
         contact.setId(id);
         contact.setName(contactDTO.getName());
@@ -92,15 +91,14 @@ public class DatabaseContactRepository implements ContactRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public int deleteById(Long id) {
         String sql = "DELETE FROM contacts WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 
     @Override
     public Contact saveContact(Contact contact) {
         if (contact.getId() != null) {
-            // If the contact has an ID, attempt to update it
             Optional<Contact> existingContact = findById(contact.getId());
             if (existingContact.isPresent()) {
                 return updateContact(contact.getId(), new ContactDTO(contact));
@@ -108,7 +106,6 @@ public class DatabaseContactRepository implements ContactRepository {
                 throw new RuntimeException("Contact with id " + contact.getId() + " does not exist.");
             }
         } else {
-            // If the contact does not have an ID, create a new one
             return createContact(contact);
         }
     }
