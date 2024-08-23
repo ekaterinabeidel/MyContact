@@ -1,5 +1,6 @@
 package com.example.demo.MyContact.controller;
 
+import com.example.demo.MyContact.model.UserLoginDTO;
 import com.example.demo.MyContact.model.UserRegisterDTO;
 import com.example.demo.MyContact.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,12 @@ public class AuthController {
     }
 
     @PostMapping("/login") // 200 OK: 001dXNlckBleGFtcGxlLmNvbXxwYXNzd29yZDEyMw==
-    public ResponseEntity<String> login(@RequestParam("email") String email, @RequestParam("password") String password) {
+    public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
         try {
-            String token = authService.authenticate(email, password);
+            if (userLoginDTO.getEmail() == null || userLoginDTO.getPassword() == null) {
+                return new ResponseEntity<>("Invalid input data", HttpStatus.BAD_REQUEST);
+            }
+            String token = authService.authenticate(userLoginDTO.getEmail(), userLoginDTO.getPassword());
             if (token != null) {
                 return new ResponseEntity<>(token, HttpStatus.OK);
             } else {
