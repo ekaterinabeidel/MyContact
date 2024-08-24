@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "1ec4e6a7-8911-4891-9b88-6154bb1c165b",
+		"name": "MyContact",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "37559760"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"ekaterina@gmai.com\",\r\n    \"password\": \"123456789Aa\",\r\n    \"name\":  \"Kate\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/api/auth/register"
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"ekaterina@gmai.com\",\r\n    \"password\": \"123456789Aa\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "user@example.com",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "password123",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "find all contacts token",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "001ZWthdGVyaW5hQGdtYWkuY29tfDEyMzQ1Njc4OUFh",
+						"type": "text"
+					}
+				],
+				"url": "http://localhost:8080/api/token/contacts"
+			},
+			"response": []
+		},
+		{
+			"name": "find contact by id token",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "001ZWthdGVyaW5hQGdtYWkuY29tfDEyMzQ1Njc4OUFh",
+						"type": "text"
+					}
+				],
+				"url": "http://localhost:8080/api/token/contacts/22"
+			},
+			"response": []
+		},
+		{
+			"name": "create contact token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "001ZWthdGVyaW5hQGdtYWkuY29tfDEyMzQ1Njc4OUFh",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"2222222TestUpdateMethod\",\r\n  \"fullname\": \"Owner does not be null\",\r\n  \"email\": \"12ftghfghfe@example.com\",\r\n  \"phones\": [\"1890\", \"8938498\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/api/token/contacts"
+			},
+			"response": []
+		},
+		{
+			"name": "update contact token",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "001ZWthdGVyaW5hQGdtYWkuY29tfDEyMzQ1Njc4OUFh",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"CreatePersonTokenTestPhones\",\r\n    \"fullname\": \"phonesUpdate\",\r\n    \"email\": \"123john.doe@example.com\",\r\n    \"phones\": [\r\n        \"123888456-7890\",\r\n        \"84758938475398\"\r\n    ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/api/token/contacts/17"
+			},
+			"response": []
+		},
+		{
+			"name": "delete contact token",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "001ZWthdGVyaW5hQGdtYWkuY29tfDEyMzQ1Njc4OUFh",
+						"type": "text"
+					}
+				],
+				"url": "http://localhost:8080/api/token/contacts/18"
+			},
+			"response": []
+		}
+	]
+}
