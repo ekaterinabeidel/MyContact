@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 
@@ -15,7 +17,7 @@ public class Contact {
     private String name;
     private String fullname;
     private String email;
-    private String phone;
+    private List<String> phones;
     private Long ownerId;
 
 
