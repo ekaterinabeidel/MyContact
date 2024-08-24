@@ -40,7 +40,7 @@ public class InMemoryContactService implements ContactService {
         contact.setName(contactDTO.getName());
         contact.setFullname(contactDTO.getFullname());
         contact.setEmail(contactDTO.getEmail());
-        contact.setPhone(contactDTO.getPhone());
+        contact.setPhones(contactDTO.getPhones());
 
         return contactRepository.createContact(contact);
     }
@@ -51,15 +51,12 @@ public class InMemoryContactService implements ContactService {
             throw new IllegalArgumentException("ID and ContactDTO cannot be null");
         }
 
-        // Retrieve existing contact
         Contact existingContact = contactRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Contact with id " + id + " does not exist."));
-
-        // Update existing contact details
         existingContact.setName(updatedContact.getName());
         existingContact.setFullname(updatedContact.getFullname());
         existingContact.setEmail(updatedContact.getEmail());
-        existingContact.setPhone(updatedContact.getPhone());
+        existingContact.setPhones(updatedContact.getPhones());
 
         return contactRepository.updateContact(id, updatedContact);
     }
