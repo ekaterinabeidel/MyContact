@@ -1,5 +1,5 @@
 package com.example.demo.MyContact;
-import com.example.demo.MyContact.service.ContactService;
+import com.example.demo.MyContact.service.contact.ContactService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

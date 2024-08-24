@@ -1,7 +1,8 @@
 package com.example.demo.MyContact.repository;
 
-import com.example.demo.MyContact.model.Contact;
-import com.example.demo.MyContact.model.ContactDTO;
+import com.example.demo.MyContact.model.contact.Contact;
+import com.example.demo.MyContact.model.contact.ContactDTO;
+import com.example.demo.MyContact.repository.contact.InMemoryContactRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

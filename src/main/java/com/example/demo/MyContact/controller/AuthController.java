@@ -1,8 +1,8 @@
 package com.example.demo.MyContact.controller;
 
-import com.example.demo.MyContact.model.UserLoginDTO;
-import com.example.demo.MyContact.model.UserRegisterDTO;
-import com.example.demo.MyContact.service.AuthService;
+import com.example.demo.MyContact.model.user.UserLoginDTO;
+import com.example.demo.MyContact.model.user.UserRegisterDTO;
+import com.example.demo.MyContact.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,8 @@
-package com.example.demo.MyContact.service;
+package com.example.demo.MyContact.service.contact;
 
-import com.example.demo.MyContact.model.Contact;
-import com.example.demo.MyContact.model.ContactDTO;
-import com.example.demo.MyContact.repository.ContactRepository;
+import com.example.demo.MyContact.model.contact.Contact;
+import com.example.demo.MyContact.model.contact.ContactDTO;
+import com.example.demo.MyContact.repository.contact.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

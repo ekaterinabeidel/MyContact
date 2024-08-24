@@ -1,15 +1,15 @@
 package com.example.demo.MyContact.service;
 
-import com.example.demo.MyContact.model.Contact;
-import com.example.demo.MyContact.model.ContactDTO;
-import com.example.demo.MyContact.repository.InMemoryContactRepository;
+import com.example.demo.MyContact.model.contact.Contact;
+import com.example.demo.MyContact.model.contact.ContactDTO;
+import com.example.demo.MyContact.repository.contact.InMemoryContactRepository;
+import com.example.demo.MyContact.service.contact.InMemoryContactService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
