@@ -71,22 +71,32 @@ public class DatabaseContactRepository implements ContactRepository {
 
     @Override
     public Contact updateContact(Long id, ContactDTO contactDTO) {
-        String sql = "UPDATE contacts SET name = ?, fullname = ?, email = ?, phone = ? WHERE id = ?";
+        String sql = "UPDATE contacts SET name = ?, fullname = ?, email = ? WHERE id = ?";
         int rowsAffected = jdbcTemplate.update(sql,
                 contactDTO.getName(),
                 contactDTO.getFullname(),
                 contactDTO.getEmail(),
-                contactDTO.getPhone(),
                 id);
         if (rowsAffected == 0) {
             throw new RuntimeException("Failed to update contact with id " + id);
         }
+
+        String selectPhonesSql = "SELECT phone FROM phones WHERE contact_id = ?";
+        List<String> existingPhones = jdbcTemplate.queryForList(selectPhonesSql, String.class, id);
+
+        String insertPhoneSql = "INSERT INTO phones (contact_id, phone) VALUES (?, ?)";
+        for (String phone : contactDTO.getPhones()) {
+            if (!existingPhones.contains(phone)) {
+                jdbcTemplate.update(insertPhoneSql, id, phone);
+            }
+        }
+
         Contact contact = new Contact();
         contact.setId(id);
         contact.setName(contactDTO.getName());
         contact.setFullname(contactDTO.getFullname());
         contact.setEmail(contactDTO.getEmail());
-        contact.setPhone(contactDTO.getPhone());
+        contact.setPhones(contactDTO.getPhones());
         return contact;
     }
 
