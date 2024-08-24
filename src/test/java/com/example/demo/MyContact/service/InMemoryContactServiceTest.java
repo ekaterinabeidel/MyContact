@@ -36,7 +36,7 @@ class InMemoryContactServiceTest {
         contact.setName("Joey");
         contact.setFullname("Tribbiani");
         contact.setEmail("joey.tribbiani@example.com");
-        contact.setPhone("123456789");
+        contact.setPhones(List.of("123456789"));
 
         when(contactRepository.findAll()).thenReturn(List.of(contact));
 
@@ -79,20 +79,21 @@ class InMemoryContactServiceTest {
         assertEquals("Penny", result.getName());
         assertEquals("Hofstadter", result.getFullname());
         assertEquals("penny.hofstadter@example.com", result.getEmail());
-        assertEquals("987654321", result.getPhones());
+        assertEquals(List.of("987654321", "784375398457"), result.getPhones());
         verify(contactRepository, times(1)).createContact(any(Contact.class));
     }
 
     @Test
     void updateContactTest() {
         ContactDTO contactDTO =
-                new ContactDTO("Howard", "Wolowitz", "howard.wolowitz@example.com", "666666666");
+                new ContactDTO("Howard", "Wolowitz",
+                        "howard.wolowitz@example.com", List.of("666666666"));
         Contact contact = new Contact();
         contact.setId(1L);
         contact.setName(contactDTO.getName());
         contact.setFullname(contactDTO.getFullname());
         contact.setEmail(contactDTO.getEmail());
-        contact.setPhone(contactDTO.getPhone());
+        contact.setPhones(contactDTO.getPhones());
 
         when(contactRepository.findById(1L)).thenReturn(Optional.of(contact));
         when(contactRepository.updateContact(eq(1L), any(ContactDTO.class))).thenReturn(contact);
@@ -103,9 +104,9 @@ class InMemoryContactServiceTest {
 
     @Test
     void deleteContactTest() {
-        doNothing().when(contactRepository).deleteById(anyLong());
-
-        contactService.deleteContact(1L);
-        verify(contactRepository, times(1)).deleteById(anyLong());
+        when(contactRepository.deleteById(anyLong())).thenReturn(1);
+        boolean result = contactService.deleteContact(1L);
+        assertTrue(result);
+        verify(contactRepository).deleteById(1L);
     }
 }
