@@ -11,6 +11,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 class InMemoryContactRepositoryTest {
     private InMemoryContactRepository repository;
@@ -35,7 +37,7 @@ class InMemoryContactRepositoryTest {
         assertEquals("Sheldon", contacts.getFirst().getName());
         assertEquals("Cooper", contacts.getFirst().getFullname());
         assertEquals("sheldon.cooper@example.com", contacts.getFirst().getEmail());
-        assertEquals("987654321", contacts.getFirst().getPhones());
+        assertEquals(List.of("987654321"), contacts.getFirst().getPhones());
     }
 
     @Test
@@ -53,7 +55,7 @@ class InMemoryContactRepositoryTest {
         assertEquals("Monica", foundContact.get().getName());
         assertEquals("Geller", foundContact.get().getFullname());
         assertEquals("monica.geller@example.com", foundContact.get().getEmail());
-        assertEquals("555555555", foundContact.get().getPhones());
+        assertEquals(List.of("555555555"), foundContact.get().getPhones());
     }
 
     @Test
@@ -69,7 +71,7 @@ class InMemoryContactRepositoryTest {
         assertEquals("Rachel", savedContact.getName());
         assertEquals("Green", savedContact.getFullname());
         assertEquals("rachel.green@example.com", savedContact.getEmail());
-        assertEquals("123456789", savedContact.getPhones());
+        assertEquals(List.of("123456789"), savedContact.getPhones());
     }
 
     @Test
@@ -108,7 +110,7 @@ class InMemoryContactRepositoryTest {
         contact.setName("Leonard");
         contact.setFullname("Hofstadter");
         contact.setEmail("leonard.hofstadter@example.com");
-        contact.setPhone("666666666");
+        contact.setPhones(List.of("666666666"));
         Contact savedContact = repository.createContact(contact);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -118,7 +120,9 @@ class InMemoryContactRepositoryTest {
 
     @Test
     void updateContactIAExceptionContactIdNullTest() {
-        ContactDTO contactDTO = new ContactDTO("Leonard", "Hofstadter", "leonard.hofstadter.updated@example.com", "666666666");
+        ContactDTO contactDTO =
+                new ContactDTO("Leonard", "Hofstadter",
+                        "leonard.hofstadter.updated@example.com", List.of("666666666"));
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> repository.updateContact(null, contactDTO));
         assertEquals("ID and ContactDTO cannot be null", exception.getMessage());
@@ -127,7 +131,9 @@ class InMemoryContactRepositoryTest {
     @Test
     void updateContactIAExceptionContactDoesNotExistText() {
         Long nonExistentId = 1L; // Assume this ID does not exist in the repository
-        ContactDTO contactDTO = new ContactDTO("Leonard", "Hofstadter", "leonard.hofstadter.updated@example.com", "666666666");
+        ContactDTO contactDTO =
+                new ContactDTO("Leonard", "Hofstadter",
+                        "leonard.hofstadter.updated@example.com", List.of("666666666"));
 
         NoSuchElementException exception = assertThrows(NoSuchElementException.class,
                 () -> repository.updateContact(nonExistentId, contactDTO));
@@ -140,7 +146,7 @@ class InMemoryContactRepositoryTest {
         contact.setName("Phoebe");
         contact.setFullname("Buffay");
         contact.setEmail("phoebe.buffay@example.com");
-        contact.setPhone("777777777");
+        contact.setPhones(List.of("7777777"));
 
         Contact savedContact = repository.createContact(contact);
         repository.deleteById(savedContact.getId());
@@ -149,13 +155,16 @@ class InMemoryContactRepositoryTest {
         assertFalse(deletedContact.isPresent());
     }
 
+
+
+
     @Test
     void saveContactUpdateTest() {
         Contact initialContact = new Contact();
         initialContact.setName("Penny");
         initialContact.setFullname("Hofstadter");
         initialContact.setEmail("penny.hofstadter@example.com");
-        initialContact.setPhone("321321321");
+        initialContact.setPhones(List.of("321321321"));
 
         Contact savedContact = repository.saveContact(initialContact);
         Long id = savedContact.getId();
@@ -165,7 +174,7 @@ class InMemoryContactRepositoryTest {
         updatedContact.setName("Jane");
         updatedContact.setFullname("Jane Smith");
         updatedContact.setEmail("jane.smith@example.com");
-        updatedContact.setPhone("1122334455");
+        updatedContact.setPhones(List.of("1122334455"));
 
         Contact updatedSavedContact = repository.saveContact(updatedContact);
 
@@ -174,7 +183,7 @@ class InMemoryContactRepositoryTest {
         assertEquals("Jane", updatedSavedContact.getName());
         assertEquals("Jane Smith", updatedSavedContact.getFullname());
         assertEquals("jane.smith@example.com", updatedSavedContact.getEmail());
-        assertEquals("1122334455", updatedSavedContact.getPhone());
+        assertEquals(List.of("1122334455"), updatedSavedContact.getPhones());
     }
 
     @Test
@@ -183,7 +192,7 @@ class InMemoryContactRepositoryTest {
         contact.setName("Joey");
         contact.setFullname("Tribbiani");
         contact.setEmail("joey.tribbiani@example.com");
-        contact.setPhone("123123123");
+        contact.setPhones(List.of("123123123"));
 
         Contact savedContact = repository.saveContact(contact);
 
