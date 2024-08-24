@@ -102,8 +102,11 @@ public class DatabaseContactRepository implements ContactRepository {
 
     @Override
     public int deleteById(Long id) {
-        String sql = "DELETE FROM contacts WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        String deletePhonesSql = "DELETE FROM phones WHERE contact_id = ?";
+        jdbcTemplate.update(deletePhonesSql, id);
+
+        String deleteContactSql = "DELETE FROM contacts WHERE id = ?";
+        return jdbcTemplate.update(deleteContactSql, id);
     }
 
     @Override
