@@ -36,7 +36,7 @@ public class DatabaseContactService implements ContactService {
         contact.setName(contactDTO.getName());
         contact.setFullname(contactDTO.getFullname());
         contact.setEmail(contactDTO.getEmail());
-        contact.setPhone(contactDTO.getPhone());
+        contact.setPhones(contactDTO.getPhones());
 
         return contactRepository.createContact(contact);
     }
@@ -53,7 +53,7 @@ public class DatabaseContactService implements ContactService {
         existingContact.setName(updatedContact.getName());
         existingContact.setFullname(updatedContact.getFullname());
         existingContact.setEmail(updatedContact.getEmail());
-        existingContact.setPhone(updatedContact.getPhone());
+        existingContact.setPhones(updatedContact.getPhones());
 
         return contactRepository.updateContact(id, updatedContact);
     }
