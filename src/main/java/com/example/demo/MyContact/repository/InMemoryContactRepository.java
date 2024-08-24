@@ -49,7 +49,7 @@ public class InMemoryContactRepository implements ContactRepository {
         existingContact.setName(contactDTO.getName());
         existingContact.setFullname(contactDTO.getFullname());
         existingContact.setEmail(contactDTO.getEmail());
-        existingContact.setPhone(contactDTO.getPhone());
+        existingContact.setPhones(contactDTO.getPhones());
 
         return existingContact;
     }
