@@ -28,7 +28,11 @@ public class DatabaseContactRepository implements ContactRepository {
         contact.setName(rs.getString("name"));
         contact.setFullname(rs.getString("fullname"));
         contact.setEmail(rs.getString("email"));
-        contact.setPhone(rs.getString("phone"));
+
+        String phoneSql = "SELECT phone FROM phones WHERE contact_id = ?";
+        List<String> phones = jdbcTemplate.query(phoneSql,
+                (rs1, rowNum1) -> rs1.getString("phone"), contact.getId());
+        contact.setPhones(phones);
         return contact;
     };
 
