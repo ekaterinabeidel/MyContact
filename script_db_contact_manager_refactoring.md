@@ -53,3 +53,23 @@ ADD CONSTRAINT fk_owner
 FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE SET NULL;
 
 ```
+
+# Триггер
+###  Чтобы предотвратить обновление столбца ownerId на NULL, даже если в запросе передается NULL. Триггер будет срабатывать перед выполнением команды UPDATE и заменять NULL на старое значение столбца.
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER prevent_null_ownerid
+BEFORE UPDATE ON contacts
+FOR EACH ROW
+BEGIN
+    IF NEW.ownerId IS NULL THEN
+        SET NEW.ownerId = OLD.ownerId;
+    END IF;
+END;
+//
+
+DELIMITER ;
+
+```
