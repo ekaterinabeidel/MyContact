@@ -31,7 +31,7 @@ public class InMemoryContactService implements ContactService {
     }
 
     @Override
-    public Contact createContact(ContactDTO contactDTO) {
+    public Contact createContact(Long ownerId, ContactDTO contactDTO) {
         if (contactDTO == null) {
             throw new IllegalArgumentException("ContactDTO cannot be null");
         }
@@ -41,6 +41,7 @@ public class InMemoryContactService implements ContactService {
         contact.setFullname(contactDTO.getFullname());
         contact.setEmail(contactDTO.getEmail());
         contact.setPhones(contactDTO.getPhones());
+        contact.setOwnerId(ownerId);
 
         return contactRepository.createContact(contact);
     }
@@ -65,5 +66,10 @@ public class InMemoryContactService implements ContactService {
     public boolean deleteContact(Long id) {
         int rowsAffected = contactRepository.deleteById(id);
         return rowsAffected > 0;
+    }
+
+    @Override
+    public List<Contact> getContactsByUserId(Long ownerId) {
+        return null;
     }
 }

@@ -4,6 +4,7 @@ import com.example.demo.MyContact.model.contact.Contact;
 import com.example.demo.MyContact.model.contact.ContactDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Repository
@@ -28,6 +30,7 @@ public class DatabaseContactRepository implements ContactRepository {
         contact.setName(rs.getString("name"));
         contact.setFullname(rs.getString("fullname"));
         contact.setEmail(rs.getString("email"));
+        contact.setOwnerId(rs.getLong("owner_id"));
 
         String phoneSql = "SELECT phone FROM phones WHERE contact_id = ?";
         List<String> phones = jdbcTemplate.query(phoneSql,
@@ -55,13 +58,14 @@ public class DatabaseContactRepository implements ContactRepository {
 
     @Override
     public Contact createContact(Contact contact) {
-        String sql = "INSERT INTO contacts (name, fullname, email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO contacts (name, fullname, email, owner_id) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, contact.getName());
             ps.setString(2, contact.getFullname());
             ps.setString(3, contact.getEmail());
+            ps.setLong(4, contact.getOwnerId());
             return ps;
         }, keyHolder);
         Number key = keyHolder.getKey();
@@ -78,6 +82,18 @@ public class DatabaseContactRepository implements ContactRepository {
 
     @Override
     public Contact updateContact(Long id, ContactDTO contactDTO) {
+        String selectContactSql = "SELECT * FROM contacts WHERE id = ?";
+        Contact existingContact = jdbcTemplate.queryForObject(selectContactSql,
+                new BeanPropertyRowMapper<>(Contact.class), id);
+
+        if (existingContact == null) {
+            throw new NoSuchElementException("Contact with id " + id + " does not exist.");
+        }
+
+        existingContact.setName(contactDTO.getName() != null ? contactDTO.getName() : existingContact.getName());
+        existingContact.setFullname(contactDTO.getFullname() != null ? contactDTO.getFullname() : existingContact.getFullname());
+        existingContact.setEmail(contactDTO.getEmail() != null ? contactDTO.getEmail() : existingContact.getEmail());
+
         String sql = "UPDATE contacts SET name = ?, fullname = ?, email = ? WHERE id = ?";
         int rowsAffected = jdbcTemplate.update(sql,
                 contactDTO.getName(),
@@ -114,6 +130,16 @@ public class DatabaseContactRepository implements ContactRepository {
 
         String deleteContactSql = "DELETE FROM contacts WHERE id = ?";
         return jdbcTemplate.update(deleteContactSql, id);
+    }
+
+    @Override
+    public List<Contact> findByUserId(Long ownerId) {
+        String sql = "SELECT * FROM contacts WHERE owner_id = ?";
+        try {
+            return jdbcTemplate.query(sql, new Object[]{ownerId}, contactRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
     }
 
     @Override

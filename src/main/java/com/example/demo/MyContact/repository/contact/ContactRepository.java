@@ -27,4 +27,6 @@ public interface ContactRepository {
 
     int deleteById(Long id);
 
+    List<Contact> findByUserId(Long ownerId);
+
 }

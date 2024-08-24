@@ -64,21 +64,22 @@ class InMemoryContactServiceTest {
     void createContactTest() {
         ContactDTO contactDTO =
                 new ContactDTO("Penny", "Hofstadter",
-                        "penny.hofstadter@example.com", "987654321");
+                        "penny.hofstadter@example.com", List.of("987654321", "784375398457"));
         Contact contact = new Contact();
         contact.setName(contactDTO.getName());
         contact.setFullname(contactDTO.getFullname());
         contact.setEmail(contactDTO.getEmail());
-        contact.setPhone(contactDTO.getPhone());
+        contact.setPhones(contactDTO.getPhones());
+        contact.setOwnerId(1L);
 
         when(contactRepository.createContact(any(Contact.class))).thenReturn(contact);
 
-        Contact result = contactService.createContact(contactDTO);
+        Contact result = contactService.createContact(1L, contactDTO);
         assertNotNull(result);
         assertEquals("Penny", result.getName());
         assertEquals("Hofstadter", result.getFullname());
         assertEquals("penny.hofstadter@example.com", result.getEmail());
-        assertEquals("987654321", result.getPhone());
+        assertEquals("987654321", result.getPhones());
         verify(contactRepository, times(1)).createContact(any(Contact.class));
     }
 

@@ -29,7 +29,7 @@ public class ContactTokenController {
         return token != null && authService.validateToken(token);
     }
 
-    @Operation(summary = "Получить все контакты", description = "Возвращает список всех контактов.")
+    @Operation(summary = "Получить все мои контакты", description = "Возвращает список всех контактов юзера.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Успешное получение списка контактов")})
     @GetMapping
@@ -37,7 +37,11 @@ public class ContactTokenController {
         if (!isTokenValid(token)) {
             return ResponseEntity.status(401).build();
         }
-        List<Contact> contacts = contactService.getAllContacts();
+        Long ownerId = authService.getUserIdFromToken(token);
+        if (ownerId == null) {
+            return ResponseEntity.status(401).build();
+        }
+        List<Contact> contacts = contactService.getContactsByUserId(ownerId);
         return ResponseEntity.ok(contacts);
     }
 

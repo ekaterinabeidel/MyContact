@@ -64,4 +64,9 @@ public class DatabaseContactService implements ContactService {
         int rowsAffected = contactRepository.deleteById(id);
         return rowsAffected > 0;
     }
+
+    @Override
+    public List<Contact> getContactsByUserId(Long ownerId) {
+        return contactRepository.findByUserId(ownerId);
+    }
 }

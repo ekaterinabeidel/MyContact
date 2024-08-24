@@ -1,4 +1,4 @@
-package com.example.demo.MyContact.controller;
+package com.example.demo.MyContact.controller.auth;
 
 import com.example.demo.MyContact.model.user.UserLoginDTO;
 import com.example.demo.MyContact.model.user.UserRegisterDTO;
@@ -32,7 +32,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login") // 200 OK: 001dXNlckBleGFtcGxlLmNvbXxwYXNzd29yZDEyMw==
+    @PostMapping("/login") // 200 OK: 001ZWthdGVyaW5hQGdtYWkuY29tfDEyMzQ1Njc4OUFh
     public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
         try {
             if (userLoginDTO.getEmail() == null || userLoginDTO.getPassword() == null) {

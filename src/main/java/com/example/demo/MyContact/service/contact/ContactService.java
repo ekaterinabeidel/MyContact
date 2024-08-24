@@ -25,4 +25,7 @@ public interface ContactService {
     Contact updateContact(Long id, ContactDTO updatedContact);
 
     boolean deleteContact(Long id);
+
+    List<Contact> getContactsByUserId(Long ownerId);
+
 }

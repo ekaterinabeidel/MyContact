@@ -26,7 +26,7 @@ class InMemoryContactRepositoryTest {
         contact.setName("Sheldon");
         contact.setFullname("Cooper");
         contact.setEmail("sheldon.cooper@example.com");
-        contact.setPhone("987654321");
+        contact.setPhones(List.of("987654321"));
 
         repository.createContact(contact);
 
@@ -35,7 +35,7 @@ class InMemoryContactRepositoryTest {
         assertEquals("Sheldon", contacts.getFirst().getName());
         assertEquals("Cooper", contacts.getFirst().getFullname());
         assertEquals("sheldon.cooper@example.com", contacts.getFirst().getEmail());
-        assertEquals("987654321", contacts.getFirst().getPhone());
+        assertEquals("987654321", contacts.getFirst().getPhones());
     }
 
     @Test
@@ -44,7 +44,7 @@ class InMemoryContactRepositoryTest {
         contact.setName("Monica");
         contact.setFullname("Geller");
         contact.setEmail("monica.geller@example.com");
-        contact.setPhone("555555555");
+        contact.setPhones(List.of("555555555"));
 
         Contact savedContact = repository.createContact(contact);
         Optional<Contact> foundContact = repository.findById(savedContact.getId());
@@ -53,7 +53,7 @@ class InMemoryContactRepositoryTest {
         assertEquals("Monica", foundContact.get().getName());
         assertEquals("Geller", foundContact.get().getFullname());
         assertEquals("monica.geller@example.com", foundContact.get().getEmail());
-        assertEquals("555555555", foundContact.get().getPhone());
+        assertEquals("555555555", foundContact.get().getPhones());
     }
 
     @Test
@@ -62,14 +62,14 @@ class InMemoryContactRepositoryTest {
         contact.setName("Rachel");
         contact.setFullname("Green");
         contact.setEmail("rachel.green@example.com");
-        contact.setPhone("123456789");
+        contact.setPhones(List.of("123456789"));
 
         Contact savedContact = repository.createContact(contact);
         assertNotNull(savedContact.getId());
         assertEquals("Rachel", savedContact.getName());
         assertEquals("Green", savedContact.getFullname());
         assertEquals("rachel.green@example.com", savedContact.getEmail());
-        assertEquals("123456789", savedContact.getPhone());
+        assertEquals("123456789", savedContact.getPhones());
     }
 
     @Test
@@ -85,7 +85,7 @@ class InMemoryContactRepositoryTest {
         contact.setName("Leonard");
         contact.setFullname("Hofstadter");
         contact.setEmail("leonard.hofstadter@example.com");
-        contact.setPhone("666666666");
+        contact.setPhones(List.of("666666666"));
 
         Contact savedContact = repository.createContact(contact);
         savedContact.setEmail("leonard.hofstadter.updated@example.com");
@@ -93,7 +93,7 @@ class InMemoryContactRepositoryTest {
                 "Leonard",
                 "Hofstadter",
                 "leonard.hofstadter.updated@example.com",
-                "666666666"
+                List.of("666666666")
         );
         Contact updatedContact = repository.updateContact(savedContact.getId(), updatedDTO);
 

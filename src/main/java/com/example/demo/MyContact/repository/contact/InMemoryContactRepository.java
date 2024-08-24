@@ -81,4 +81,9 @@ public class InMemoryContactRepository implements ContactRepository {
             return 0;
         }
     }
+
+    @Override
+    public List<Contact> findByUserId(Long ownerId) {
+        return null;
+    }
 }
