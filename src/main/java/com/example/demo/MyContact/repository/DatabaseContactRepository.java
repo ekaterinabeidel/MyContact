@@ -51,19 +51,22 @@ public class DatabaseContactRepository implements ContactRepository {
 
     @Override
     public Contact createContact(Contact contact) {
-        String sql = "INSERT INTO contacts (name, fullname, email, phone) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO contacts (name, fullname, email) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, contact.getName());
             ps.setString(2, contact.getFullname());
             ps.setString(3, contact.getEmail());
-            ps.setString(4, contact.getPhone());
             return ps;
         }, keyHolder);
         Number key = keyHolder.getKey();
         if (key != null) {
             contact.setId(key.longValue());
+            String insertPhoneSql = "INSERT INTO phones (contact_id, phone) VALUES (?, ?)";
+            for (String phone : contact.getPhones()) {
+                jdbcTemplate.update(insertPhoneSql, contact.getId(), phone);
+            }
             return contact;
         }
         throw new RuntimeException("Failed to generate ID for new contact.");
