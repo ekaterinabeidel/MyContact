@@ -1,7 +1,7 @@
-package com.example.demo.MyContact.service;
+package com.example.demo.MyContact.service.contact;
 
-import com.example.demo.MyContact.model.Contact;
-import com.example.demo.MyContact.model.ContactDTO;
+import com.example.demo.MyContact.model.contact.Contact;
+import com.example.demo.MyContact.model.contact.ContactDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ public interface ContactService {
 
     Optional<Contact> getContactById(Long id);
 
-    Contact createContact(ContactDTO contactDTO);
+    Contact createContact(Long ownerId, ContactDTO contactDTO);
 
     Contact updateContact(Long id, ContactDTO updatedContact);
 

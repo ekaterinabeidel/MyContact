@@ -1,8 +1,7 @@
-package com.example.demo.MyContact.service;
+package com.example.demo.MyContact.service.auth;
 
-import com.example.demo.MyContact.model.User;
-import com.example.demo.MyContact.repository.DataBaseUserRepository;
-import com.example.demo.MyContact.repository.UserRepository;
+import com.example.demo.MyContact.model.user.User;
+import com.example.demo.MyContact.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,5 +73,13 @@ public class AuthService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public Long getUserIdFromToken(String token) {
+        String decodedToken = new String(Base64.getDecoder().decode(token.substring(3)));
+        String email = decodedToken.split("\\|")[0];
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        return optionalUser.map(User::getId).orElse(null);
     }
 }

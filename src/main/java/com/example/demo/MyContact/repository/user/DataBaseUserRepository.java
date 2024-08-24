@@ -1,6 +1,6 @@
-package com.example.demo.MyContact.repository;
+package com.example.demo.MyContact.repository.user;
 
-import com.example.demo.MyContact.model.User;
+import com.example.demo.MyContact.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

@@ -1,12 +1,10 @@
-package com.example.demo.MyContact.model;
+package com.example.demo.MyContact.model.user;
 
 import lombok.Data;
 
 @Data
-public class User {
-    private Long id;
+public class UserRegisterDTO {
     private String email;
     private String password;
-    private String role;
     private String name;
 }

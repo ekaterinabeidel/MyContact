@@ -1,7 +1,7 @@
-package com.example.demo.MyContact.repository;
+package com.example.demo.MyContact.repository.contact;
 
-import com.example.demo.MyContact.model.Contact;
-import com.example.demo.MyContact.model.ContactDTO;
+import com.example.demo.MyContact.model.contact.Contact;
+import com.example.demo.MyContact.model.contact.ContactDTO;
 
 
 import java.util.*;

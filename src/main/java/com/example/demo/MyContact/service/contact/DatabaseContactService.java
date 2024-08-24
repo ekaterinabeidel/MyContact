@@ -1,8 +1,8 @@
-package com.example.demo.MyContact.service;
+package com.example.demo.MyContact.service.contact;
 
-import com.example.demo.MyContact.model.Contact;
-import com.example.demo.MyContact.model.ContactDTO;
-import com.example.demo.MyContact.repository.ContactRepository;
+import com.example.demo.MyContact.model.contact.Contact;
+import com.example.demo.MyContact.model.contact.ContactDTO;
+import com.example.demo.MyContact.repository.contact.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class DatabaseContactService implements ContactService {
     }
 
     @Override
-    public Contact createContact(ContactDTO contactDTO) {
+    public Contact createContact(Long ownerId, ContactDTO contactDTO) {
         if (contactDTO == null) {
             throw new IllegalArgumentException("ContactDTO cannot be null");
         }
@@ -37,6 +37,7 @@ public class DatabaseContactService implements ContactService {
         contact.setFullname(contactDTO.getFullname());
         contact.setEmail(contactDTO.getEmail());
         contact.setPhones(contactDTO.getPhones());
+        contact.setOwnerId(ownerId);
 
         return contactRepository.createContact(contact);
     }

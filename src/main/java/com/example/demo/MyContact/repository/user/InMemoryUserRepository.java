@@ -1,8 +1,7 @@
-package com.example.demo.MyContact.repository;
+package com.example.demo.MyContact.repository.user;
 
-import com.example.demo.MyContact.model.User;
+import com.example.demo.MyContact.model.user.User;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

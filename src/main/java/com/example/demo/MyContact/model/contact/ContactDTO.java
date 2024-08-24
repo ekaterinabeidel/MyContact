@@ -1,4 +1,4 @@
-package com.example.demo.MyContact.model;
+package com.example.demo.MyContact.model.contact;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
