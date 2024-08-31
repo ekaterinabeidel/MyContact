@@ -1,4 +1,4 @@
-package com.example.demo.MyContact.model.user;
+package com.example.demo.MyContact.dto;
 
 import lombok.Data;
 
