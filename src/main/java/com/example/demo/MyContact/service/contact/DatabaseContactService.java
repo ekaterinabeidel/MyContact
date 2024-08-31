@@ -1,14 +1,17 @@
 package com.example.demo.MyContact.service.contact;
 
-import com.example.demo.MyContact.model.contact.Contact;
-import com.example.demo.MyContact.model.contact.ContactDTO;
+import com.example.demo.MyContact.dto.ContactDTO;
+import com.example.demo.MyContact.entity.Contact;
+import com.example.demo.MyContact.entity.Phone;
 import com.example.demo.MyContact.repository.contact.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DatabaseContactService implements ContactService {
@@ -38,6 +41,14 @@ public class DatabaseContactService implements ContactService {
         contact.setEmail(contactDTO.getEmail());
         contact.setPhones(contactDTO.getPhones());
         contact.setOwnerId(ownerId);
+        if (contactDTO.getPhones() != null) {
+            List<Phone> phones = contactDTO.getPhones().stream()
+                    .peek(phone -> phone.setContact(contact))
+                    .collect(Collectors.toList());
+            contact.setPhones(phones);
+        } else {
+            contact.setPhones(new ArrayList<>());
+        }
 
         return contactRepository.createContact(contact);
     }

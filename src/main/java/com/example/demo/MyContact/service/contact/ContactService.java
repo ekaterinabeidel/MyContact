@@ -1,7 +1,7 @@
 package com.example.demo.MyContact.service.contact;
 
-import com.example.demo.MyContact.model.contact.Contact;
-import com.example.demo.MyContact.model.contact.ContactDTO;
+import com.example.demo.MyContact.dto.ContactDTO;
+import com.example.demo.MyContact.entity.Contact;
 
 import java.util.List;
 import java.util.Optional;

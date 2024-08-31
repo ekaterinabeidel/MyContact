@@ -1,8 +1,7 @@
 package com.example.demo.MyContact.repository.user;
 
-import com.example.demo.MyContact.model.user.User;
+import com.example.demo.MyContact.entity.User;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 
