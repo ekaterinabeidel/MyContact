@@ -1,7 +1,5 @@
 package com.example.demo.MyContact.repository;
 
-import com.example.demo.MyContact.model.contact.Contact;
-import com.example.demo.MyContact.model.contact.ContactDTO;
 import com.example.demo.MyContact.repository.contact.InMemoryContactRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +9,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 class InMemoryContactRepositoryTest {
     private InMemoryContactRepository repository;
