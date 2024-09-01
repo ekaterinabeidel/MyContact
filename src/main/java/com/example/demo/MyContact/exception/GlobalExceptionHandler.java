@@ -19,4 +19,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleOwnerNotFoundException(OwnerNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+    @ExceptionHandler(ContactDTONullException.class)
+    public ResponseEntity<String> handleOwnerNotFoundException(ContactDTONullException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
 }
