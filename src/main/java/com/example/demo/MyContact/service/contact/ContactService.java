@@ -1,10 +1,10 @@
 package com.example.demo.MyContact.service.contact;
 
-import com.example.demo.MyContact.dto.ContactDTO;
-import com.example.demo.MyContact.entity.Contact;
+import com.example.demo.MyContact.dto.CreateContactDTO;
+import com.example.demo.MyContact.dto.ResponseContactDTO;
+import com.example.demo.MyContact.dto.UpdateContactDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Сервис (Service)
@@ -16,16 +16,16 @@ import java.util.Optional;
  */
 
 public interface ContactService {
-    List<Contact> getAllContacts();
+    List<ResponseContactDTO> getAllContacts();
 
-    Optional<Contact> getContactById(Long id);
+    ResponseContactDTO getContactById(Long id);
 
-    Contact createContact(Long ownerId, ContactDTO contactDTO);
+    ResponseContactDTO createContact(Long ownerId, CreateContactDTO createContactDTO);
 
-    Contact updateContact(Long id, ContactDTO updatedContact);
+    ResponseContactDTO updateContact(Long id, UpdateContactDTO updateContactDTO);
 
-    boolean deleteContact(Long id);
+    void deleteContact(Long id);
 
-    List<Contact> getContactsByUserId(Long ownerId);
+    List<ResponseContactDTO> getContactsByUserId(Long ownerId);
 
 }

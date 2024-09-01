@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ContactJpaRepository extends JpaRepository<Contact, Long> {
     List<Contact> findByOwnerId(Long ownerId);
+
 }

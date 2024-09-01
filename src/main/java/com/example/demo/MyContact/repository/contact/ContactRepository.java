@@ -1,10 +1,8 @@
 package com.example.demo.MyContact.repository.contact;
 
-import com.example.demo.MyContact.dto.ContactDTO;
 import com.example.demo.MyContact.entity.Contact;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Репозиторий (Repository)
@@ -17,15 +15,13 @@ import java.util.Optional;
 public interface ContactRepository {
     List<Contact> findAll();
 
-    Optional<Contact> findById(Long id);
+    Contact findById(Long id);
 
     Contact createContact(Contact contact);
 
-    Contact updateContact(Long id, ContactDTO contactDTO);
+    Contact updateContact(Long id, Contact contact);
 
-    Contact saveContact(Contact contact);
-
-    int deleteById(Long id);
+    void deleteById(Long id);
 
     List<Contact> findByUserId(Long ownerId);
 
