@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PhoneDTO {
+public class ResponsePhoneDTO {
+    private Long id;
     private String phoneNumber;
 }
