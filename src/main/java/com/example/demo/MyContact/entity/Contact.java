@@ -21,7 +21,10 @@ public class Contact {
     private String name;
     private String fullname;
     private String email;
-    private Long ownerId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Phone> phones;

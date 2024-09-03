@@ -25,7 +25,7 @@ public class Phone {
 
     @ManyToOne
     @JoinColumn(name = "contact_id")
-    @JsonIgnore
+//    @JsonIgnore
     private Contact contact;
 
     @CreationTimestamp
