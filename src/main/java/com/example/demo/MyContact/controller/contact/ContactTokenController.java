@@ -41,7 +41,15 @@ public class ContactTokenController {
         if (ownerId == null) {
             return ResponseEntity.status(401).build();
         }
-        List<ResponseContactDTO> contacts = contactService.getContactsByUserId(ownerId);
+        String role = authService.getRoleFromToken(token);
+        List<ResponseContactDTO> contacts;
+        if ("admin".equalsIgnoreCase(role)) {
+            contacts = contactService.getAllContacts();
+        } else if ("user".equalsIgnoreCase(role)) {
+            contacts = contactService.getContactsByUserId(ownerId);
+        } else {
+            return ResponseEntity.status(403).build();
+        }
         return ResponseEntity.ok(contacts);
     }
 
@@ -55,8 +63,13 @@ public class ContactTokenController {
             return ResponseEntity.status(401).build();
         }
         ResponseContactDTO responseContactDTO = contactService.getContactById(id);
-
-        return ResponseEntity.ok(responseContactDTO);
+        Long ownerId = authService.getUserIdFromToken(token);
+        String role = authService.getRoleFromToken(token);
+        if ("admin".equalsIgnoreCase(role) || responseContactDTO.getUser().getId().equals(ownerId)) {
+            return ResponseEntity.ok(responseContactDTO);
+        } else {
+            return ResponseEntity.status(403).build();
+        }
     }
 
     @Operation(summary = "Создать новый контакт", description = "Создает новый контакт с указанными данными.")
@@ -82,9 +95,14 @@ public class ContactTokenController {
         if (!isTokenValid(token)) {
             return ResponseEntity.status(401).build();
         }
+        Long ownerId = authService.getUserIdFromToken(token);
+        String role = authService.getRoleFromToken(token);
         ResponseContactDTO responseContactDTO = contactService.updateContact(id, updatedContact);
-        return
-                ResponseEntity.ok(responseContactDTO);
+        if ("admin".equalsIgnoreCase(role) || responseContactDTO.getUser().getId().equals(ownerId)) {
+            return ResponseEntity.ok(responseContactDTO);
+        } else {
+            return ResponseEntity.status(403).build();
+        }
     }
 
     @Operation(summary = "Удалить контакт", description = "Удаляет контакт по указанному идентификатору.")
@@ -96,7 +114,14 @@ public class ContactTokenController {
         if (!isTokenValid(token)) {
             return ResponseEntity.status(401).build();
         }
-        contactService.deleteContact(id);
-        return ResponseEntity.noContent().build();
+        ResponseContactDTO responseContactDTO = contactService.getContactById(id);
+        Long ownerId = authService.getUserIdFromToken(token);
+        String role = authService.getRoleFromToken(token);
+        if ("admin".equalsIgnoreCase(role) || responseContactDTO.getUser().getId().equals(ownerId)) {
+            contactService.deleteContact(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(403).build();
+        }
     }
 }

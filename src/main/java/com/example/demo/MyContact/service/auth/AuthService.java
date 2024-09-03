@@ -21,7 +21,7 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public void registerUser(String email, String password, String name) throws SQLException {
+    public void registerUser(String email, String password, String name, String role) throws SQLException {
         if(userRepository.existsByEmail(email)){
             throw new EmailAlreadyExistsException("User with email " + email + " already exists");
         }
@@ -30,6 +30,7 @@ public class AuthService {
         user.setPassword(hashPassword(password));
         user.setRole("ADMIN");
         user.setName(name);
+        user.setRole(role);
         userRepository.save(user);
     }
 
@@ -38,7 +39,7 @@ public class AuthService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (user.getPassword().equals(hashPassword(password))) {
-                return generateToken(email, password);
+                return generateToken(email, password, user.getRole());
             }
         }
         return null;
@@ -54,24 +55,26 @@ public class AuthService {
         }
     }
 
-    private String generateToken(String email, String password) {
-        return "001" + Base64.getEncoder().encodeToString((email + "|" + password).getBytes());
+    private String generateToken(String email, String password, String role) {
+        return "001" + Base64.getEncoder().encodeToString((email + "|" + password+ "|" + role).getBytes());
     }
 
     public boolean validateToken(String token) {
         try {
             String decodedToken = new String(Base64.getDecoder().decode(token.substring(3)));
             String[] parts = decodedToken.split("\\|");
-            if (parts.length != 2) {
+            if (parts.length != 3) {
                 return false;
             }
             String email = parts[0];
             String password = parts[1];
+            String role = parts[2];
 
             Optional<User> optionalUser = userRepository.findByEmail(email);
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
-                return user.getPassword().equals(hashPassword(password));
+                return user.getPassword().equals(hashPassword(password))
+                        && user.getRole().equals(role);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,5 +88,14 @@ public class AuthService {
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
         return optionalUser.map(User::getId).orElse(null);
+    }
+
+    public String getRoleFromToken(String token){
+        String decodedToken = new String(Base64.getDecoder().decode(token.substring(3)));
+        String role = decodedToken.split("\\|")[2];
+        if (!role.isEmpty()){
+            return role;
+        }
+        return null;
     }
 }

@@ -21,11 +21,12 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestBody UserRegisterDTO userRegisterDTO) {
         try {
             if (userRegisterDTO.getEmail() == null || userRegisterDTO.getPassword() == null ||
-                    userRegisterDTO.getName() == null) {
+                    userRegisterDTO.getName() == null || userRegisterDTO.getRole() == null) {
                 return new ResponseEntity<>("Invalid input data", HttpStatus.BAD_REQUEST);
             }
             authService.registerUser(
-                    userRegisterDTO.getEmail(), userRegisterDTO.getPassword(), userRegisterDTO.getName());
+                    userRegisterDTO.getEmail(), userRegisterDTO.getPassword(),
+                    userRegisterDTO.getName(), userRegisterDTO.getRole());
             return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
         } catch (SQLException e) {
             return new ResponseEntity<>("Registration failed", HttpStatus.INTERNAL_SERVER_ERROR);
