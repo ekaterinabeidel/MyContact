@@ -32,7 +32,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login") // 200 OK: 001ZWthdGVyaW5hQGdtYWkuY29tfDEyMzQ1Njc4OUFh
+    @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
         try {
             if (userLoginDTO.getEmail() == null || userLoginDTO.getPassword() == null) {

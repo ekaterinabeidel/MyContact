@@ -1,6 +1,7 @@
 package com.example.demo.MyContact.service.auth;
 
 import com.example.demo.MyContact.entity.User;
+import com.example.demo.MyContact.exception.EmailAlreadyExistsException;
 import com.example.demo.MyContact.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class AuthService {
     }
 
     public void registerUser(String email, String password, String name) throws SQLException {
+        if(userRepository.existsByEmail(email)){
+            throw new EmailAlreadyExistsException("User with email " + email + " already exists");
+        }
         User user = new User();
         user.setEmail(email);
         user.setPassword(hashPassword(password));

@@ -12,38 +12,37 @@ import java.util.List;
 
 @Repository
 public class DatabaseContactRepository implements ContactRepository {
-
-    private final ContactJpaRepository contactJpaRepository;
-
     @Autowired
-    public DatabaseContactRepository(ContactJpaRepository contactJpaRepository) {
-        this.contactJpaRepository = contactJpaRepository;
+    private final JpaContactsRepository jpaContactsRepository;
+
+    public DatabaseContactRepository(JpaContactsRepository jpaContactsRepository) {
+        this.jpaContactsRepository = jpaContactsRepository;
     }
 
     @Override
     public List<Contact> findAll() {
-        return contactJpaRepository.findAll();
+        return jpaContactsRepository.findAll();
     }
 
     @Override
     public Contact findById(Long id) {
-        return contactJpaRepository.findById(id).orElseThrow(
+        return jpaContactsRepository.findById(id).orElseThrow(
                 () -> new ContactNotFoundException("Contact not found with id: " + id)
         );
     }
 
     @Override
     public Contact createContact(Contact contact) {
-        return contactJpaRepository.save(contact);
+        return jpaContactsRepository.save(contact);
     }
 
     @Override
     public Contact updateContact(Long id, Contact contact) {
-        return contactJpaRepository.findById(id)
+        return jpaContactsRepository.findById(id)
                 .map(existingContact -> {
                     existingContact.setName(contact.getName());
                     existingContact.setEmail(contact.getEmail());
-                    return contactJpaRepository.save(existingContact);
+                    return jpaContactsRepository.save(existingContact);
                 })
                 .orElseThrow(
                         () -> new ContactNotFoundException("Contact not found with id: " + id)
@@ -52,15 +51,15 @@ public class DatabaseContactRepository implements ContactRepository {
 
     @Override
     public void deleteById(Long id) {
-        if (!contactJpaRepository.existsById(id)) {
+        if (!jpaContactsRepository.existsById(id)) {
             throw new ContactNotFoundException("Contact not found with id: " + id);
         }
-        contactJpaRepository.deleteById(id);
+        jpaContactsRepository.deleteById(id);
     }
 
     @Override
     public List<Contact> findByUserId(Long ownerId) {
-        List<Contact> contacts = contactJpaRepository.findByOwnerId(ownerId);
+        List<Contact> contacts = jpaContactsRepository.findByUserId(ownerId);
         if (contacts.isEmpty()) {
             throw new OwnerNotFoundException("Owner with id " + ownerId + " not found.");
         }

@@ -1,5 +1,8 @@
 package com.example.demo.MyContact.service.contact;
 
+import com.example.demo.MyContact.entity.Phone;
+import com.example.demo.MyContact.entity.User;
+import com.example.demo.MyContact.exception.UserNotFoundException;
 import com.example.demo.MyContact.mapper.ContactMapper;
 import com.example.demo.MyContact.dto.CreateContactDTO;
 import com.example.demo.MyContact.dto.ResponseContactDTO;
@@ -9,6 +12,7 @@ import com.example.demo.MyContact.exception.ContactDTONullException;
 import com.example.demo.MyContact.exception.ContactIdNullException;
 import com.example.demo.MyContact.exception.OwnerIdNullException;
 import com.example.demo.MyContact.repository.contact.ContactRepository;
+import com.example.demo.MyContact.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +26,9 @@ public class DatabaseContactService implements ContactService {
     private ContactRepository contactRepository;
     @Autowired
     private ContactMapper contactMapper;
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     public List<ResponseContactDTO> getAllContacts() {
@@ -50,7 +57,10 @@ public class DatabaseContactService implements ContactService {
             throw new ContactDTONullException("ContactDTO cannot be null");
         }
         Contact contact = contactMapper.toEntity(createContactDTO);
-        contact.setOwnerId(ownerId);
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + ownerId));
+        contact.setUser(owner);
+        contact.getPhones().forEach(phone -> phone.setContact(contact));
         Contact createdContact = contactRepository.createContact(contact);
         return contactMapper.toResponseDTO(createdContact);
     }
@@ -65,6 +75,11 @@ public class DatabaseContactService implements ContactService {
         }
         Contact existingContact = contactRepository.findById(id);
         contactMapper.updateEntity(updateContactDTO, existingContact);
+        if (existingContact.getPhones() != null) {
+            for (Phone phone : existingContact.getPhones()) {
+                phone.setContact(existingContact);
+            }
+        }
         Contact updatedContact = contactRepository.updateContact(id, existingContact);
         return contactMapper.toResponseDTO(updatedContact);
     }

@@ -1,6 +1,7 @@
 package com.example.demo.MyContact.repository.contact;
 
 import com.example.demo.MyContact.entity.Contact;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
@@ -14,9 +15,7 @@ import java.util.List;
  */
 public interface ContactRepository {
     List<Contact> findAll();
-
     Contact findById(Long id);
-
     Contact createContact(Contact contact);
 
     Contact updateContact(Long id, Contact contact);
